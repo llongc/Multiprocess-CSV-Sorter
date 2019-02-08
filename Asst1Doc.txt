@@ -1,0 +1,124 @@
+NAME
+	mergesort, scannerCSVsorter
+SYNOPSIS
+	#include"mergesort.h"
+		
+	struct head* bigbang (struct head* table, int deep, int col_num, int tar_index);
+	int chk_dig(char * num);
+	char * rev_white(char * str);
+	int compare(char * A, char * B);
+	void merge(char **, int l, int r, int m);
+	void mergesort( char ** arr, int l, int r);
+	void print_array(char ** arr, int size);
+
+	#include"scannerCSVsorter.h"
+
+	struct head* initialize(struct head* row, int col_num);
+	void install_data(struct head* row, char * line);	
+	void handler(char *, char *, char *, char*);
+	void simpleCSV(char *, char *, char *, char *);
+	void walk_through(char *, char *, char *);
+
+DESCRIPTION
+
+	scannerCSVsorter have intput with command line like -c column_name -d input_directary -o output directary. this program could walk through all the input directary and output to the directary it specified, and find the csv file and sort it and create a new sorted csv file.	
+
+	the simpleCSV() family of fuctions sort the targted CSV files, and output into targeted path or current path depends on the input path.
+	if the input path and outpath path are undifined. they will be set into current path. 
+	if the target path is not accessible it will return an erorr.
+
+	the walk_through() family of functions walk through the targeted directary, each time reach a directroy fork a process and recurse into this 
+	directory. if reach a file, call the file handller() and file handler will check if the file is csv file, if so, it will call simpleCSV to sort this
+	file. 
+
+	The bigbang() family of fuctions sort the targetd column in the target table based on its lexicographical or numeric value
+	and return the new struct head pointer points to a new table. It will call mergesort() to sort the targed column.
+
+	If the number of conversions specifications in format exceeds the number of pointer arguments, the results are
+	undefined.	
+
+	The format struct table is a pointer points to a table struction.
+
+	The table strucuter:
+	
+	table->row1 -> string_array
+		|
+		row2 -> string_array
+		|
+		row3 -> string_array
+		|
+		...
+
+	in the argument deep represents the number rows	
+			col_num represents the number of elements in one single string	
+			tar_index represents the target column we will sort.
+
+	1. scannerCSVsorter walk through a tageted directary and sort the csv files in it.
+	2. call file hander to handle files in each directary
+	3. use bigbang() method from mergesort.c file to sort the targed colum from simpleCSVsorter
+	in this method, two string arrays will be created.
+		sort the target column by merge sort.
+		two string arrays one for storing all data from targeted column and anohter for storting the sorted column.
+		in this way, since the order of rows in first array represents the order in the table
+		so by comparing the order of first string array and the order of second string array we could know the new order of rows in the outtable.
+	4. creates new structs and pointer the origial rows or table, and return the new head. we can acqure the sorted table.
+	5. write the data into a new file called file_name-sorted-column_name.csv
+
+RETURN VALUE
+	the function walkthrough() is a void function
+	the function simpleCSV() is a void function
+	The function bigbang() returns the header pointer points to the table structure.
+
+ERRORS
+	mergesort:
+		stderr: 1. if the data in the same column has different data type;
+	scannerCSVsorter:
+		simpleCSV:
+			1. if the the format of the csv file is not correct:
+				no targeted column name
+				no enough output
+				the number of column does not match the number  of headings
+				empty csv file
+		walkthrough:
+			1. if the outpath or input path is not accessible
+
+Example:
+
+	if we have a table called tab with n rows, and the lenth of each row is k, and our target column is qth col
+      
+	struct head*  initialize(struct head* row,int col_num){
+          int a;
+          row = (struct head* )malloc(sizeof(struct head)); 
+          row->values = (char**)malloc(sizeof(char*)*col_num);
+          int i;
+
+          for(i = 0;i < col_num; i++){
+                  row->values[i]=(char*)malloc(sizeof(char)*k);
+          }
+          return row;
+  	}
+
+testfile:
+	we have our own test file in the assigment, which is a drectory called test, in which there is a directary called false, which contains 2 files which represents the erorr like 
+		no column name found, 
+		number of culumns does not match the number of heads
+	and we also have the command line checking
+		if there is no -c flag
+		if there is no -d flag
+		if there is no -o flag
+		if the input directary cannot be found
+		if the output directary cannot be found
+		if there are too many arguments
+	the standard error will be returned
+
+
+
+
+
+
+
+
+	
+
+
+	
